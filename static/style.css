@@ -70,3 +70,69 @@ body{
         opacity:1;
     }
 }
+.form-container{
+    width:90%;
+    max-width:350px;
+    background:rgba(255,255,255,0.05);
+    padding:30px;
+    border-radius:20px;
+    backdrop-filter:blur(10px);
+    text-align:center;
+    box-shadow:0 0 20px rgba(0, 195, 255, 0.2);
+}
+
+.small-logo{
+    width:90px;
+    margin-bottom:15px;
+}
+
+.form-title{
+    color:white;
+    margin-bottom:25px;
+    font-family:'Cinzel', serif;
+}
+
+form{
+    display:flex;
+    flex-direction:column;
+}
+
+input{
+    margin-bottom:15px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    font-size:16px;
+}
+
+input::placeholder{
+    color:#b8dfff;
+}
+
+button{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#00cfff;
+    color:#03152b;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+.switch-text{
+    margin-top:20px;
+    color:white;
+}
+
+.switch-text a{
+    color:#00cfff;
+    text-decoration:none;
+}
