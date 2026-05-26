@@ -266,6 +266,29 @@ def dashboard():
         subjects=subjects
     )
 
+# ---------------- ABOUT PAGE ---------------- #
+
+@app.route('/about')
+def about():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template('about.html')
+
+# ---------------- PROFILE PAGE ---------------- #
+
+@app.route('/profile')
+def profile():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template(
+        'profile.html',
+        username=session['user']
+    )
+
 # ---------------- ADMIN DASHBOARD ---------------- #
 
 @app.route('/admin')
