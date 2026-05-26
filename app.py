@@ -17,7 +17,8 @@ def init_db():
         username TEXT UNIQUE,
         password TEXT,
         board TEXT,
-        class_name TEXT
+        class_name TEXT,
+        group_name TEXT
     )
     """)
 
@@ -78,7 +79,7 @@ def login():
             session['user'] = username
 
             # CHECK FIRST TIME SETUP
-            if user[3] is None or user[4] is None:
+            if user[3] is None or user[4] is None or user[5] is None:
                 return redirect('/setup')
 
             return redirect('/dashboard')
@@ -114,6 +115,7 @@ def signup():
             conn.commit()
 
         except:
+            conn.close()
             return "Username already exists"
 
         conn.close()
@@ -136,13 +138,14 @@ def setup():
 
         board = request.form['board']
         class_name = request.form['class_name']
+        group_name = request.form['group_name']
 
         conn = sqlite3.connect("examora.db")
         cursor = conn.cursor()
 
         cursor.execute(
-            "UPDATE users SET board=?, class_name=? WHERE username=?",
-            (board, class_name, session['user'])
+            "UPDATE users SET board=?, class_name=?, group_name=? WHERE username=?",
+            (board, class_name, group_name, session['user'])
         )
 
         conn.commit()
@@ -160,9 +163,107 @@ def dashboard():
     if 'user' not in session:
         return redirect('/login')
 
+    conn = sqlite3.connect("examora.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT board, class_name, group_name FROM users WHERE username=?",
+        (session['user'],)
+    )
+
+    data = cursor.fetchone()
+
+    conn.close()
+
+    board = data[0]
+    class_name = data[1]
+    group_name = data[2]
+
+    # SUBJECT SYSTEM
+
+    subjects = [
+        "English",
+        "Urdu",
+        "Islamiat",
+        "Pakistan Studies"
+    ]
+
+    if group_name == "Science Biology":
+
+        subjects += [
+            "Physics",
+            "Chemistry",
+            "Biology",
+            "Mathematics"
+        ]
+
+    elif group_name == "Science Computer":
+
+        subjects += [
+            "Physics",
+            "Chemistry",
+            "Computer Science",
+            "Mathematics"
+        ]
+
+    elif group_name == "Pre-Medical":
+
+        subjects += [
+            "Biology",
+            "Physics",
+            "Chemistry"
+        ]
+
+    elif group_name == "Pre-Engineering":
+
+        subjects += [
+            "Physics",
+            "Chemistry",
+            "Mathematics"
+        ]
+
+    elif group_name == "ICS":
+
+        subjects += [
+            "Computer Science",
+            "Physics",
+            "Mathematics"
+        ]
+
+    elif group_name == "ICOM":
+
+        subjects += [
+            "Accounting",
+            "Economics",
+            "Business Math",
+            "Commerce"
+        ]
+
+    elif group_name == "FA Arts":
+
+        subjects += [
+            "Civics",
+            "Education",
+            "Psychology",
+            "Sociology"
+        ]
+
+    elif group_name == "Arts":
+
+        subjects += [
+            "General Math",
+            "Education",
+            "Civics",
+            "Economics"
+        ]
+
     return render_template(
         'dashboard.html',
-        username=session['user']
+        username=session['user'],
+        board=board,
+        class_name=class_name,
+        group_name=group_name,
+        subjects=subjects
     )
 
 # ---------------- ADMIN DASHBOARD ---------------- #
